@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -e
+echo "Starting release process..."
+cd /opt/build/clustering
+rm -rf /opt/build/clustering/_build/prod/rel/clustering
+
+echo "Creating release artifact directory..."
+mkdir -p /opt/build/clustering/rel/artifacts
+
+echo "Installing rebar and hex..."
+mix local.rebar --force
+mix local.hex --if-missing --force
+
+echo "Fetching project deps..."
+mix deps.get
+
+echo "Cleaning and compiling..."
+mix phx.digest
+
+echo "Generating release..."
+mix release
+
+echo "Creating tarball..."
+tar -zcf "/opt/build/clustering/rel/artifacts/clustering.tar.gz" /opt/build/clustering/_build/prod
+
+echo "Release generated at rel/artifacts/clustering.tar.gz"
+exit 0

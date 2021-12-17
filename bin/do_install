@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Upload the install file
+scp -i ~/.ssh/id_rsa remote/install.sh root@192.168.1.104:/install.sh
+scp -i ~/.ssh/id_rsa remote/install.sh root@192.168.1.183:/install.sh
+scp -i ~/.ssh/id_rsa remote/install.sh root@192.168.1.198:/install.sh
+scp -i ~/.ssh/id_rsa remote/install.sh root@192.168.1.174:/install.sh
+
+# and the bashrc
+scp -i ~/.ssh/id_rsa remote/bashrc root@192.168.1.104:/root/.bashrc
+scp -i ~/.ssh/id_rsa remote/bashrc root@192.168.1.183:/root/.bashrc
+scp -i ~/.ssh/id_rsa remote/bashrc root@192.168.1.198:/root/.bashrc
+scp -i ~/.ssh/id_rsa remote/bashrc root@192.168.1.174:/root/.bashrc
+
+# Now run it
+ssh root@192.168.1.104 <<'ENDSSH'
+  sh /install.sh
+ENDSSH
+
+ssh root@192.168.1.183 <<'ENDSSH'
+  sh /install.sh
+ENDSSH
+
+ssh root@192.168.1.198 <<'ENDSSH'
+  sh /install.sh
+ENDSSH
+
+ssh root@192.168.1.174 <<'ENDSSH'
+  sh /install.sh
+ENDSSH
+

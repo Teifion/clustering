@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Upload public key
+scp ~/.ssh/id_rsa.pub root@192.168.1.104:./identity.pub
+scp ~/.ssh/id_rsa.pub root@192.168.1.183:./identity.pub
+scp ~/.ssh/id_rsa.pub root@192.168.1.198:./identity.pub
+scp ~/.ssh/id_rsa.pub root@192.168.1.174:./identity.pub
+
+# Apply it
+ssh root@192.168.1.104 <<'ENDSSH'
+  mkdir .ssh
+  chmod 700 .ssh
+  cd .ssh
+  touch authorized_keys
+  chmod 600 authorized_keys
+  cat ../identity.pub >> authorized_keys
+  rm ../identity.pub
+ENDSSH
+
+ssh root@192.168.1.183 <<'ENDSSH'
+  mkdir .ssh
+  chmod 700 .ssh
+  cd .ssh
+  touch authorized_keys
+  chmod 600 authorized_keys
+  cat ../identity.pub >> authorized_keys
+  rm ../identity.pub
+ENDSSH
+
+ssh root@192.168.1.198 <<'ENDSSH'
+  mkdir .ssh
+  chmod 700 .ssh
+  cd .ssh
+  touch authorized_keys
+  chmod 600 authorized_keys
+  cat ../identity.pub >> authorized_keys
+  rm ../identity.pub
+ENDSSH
+
+ssh root@192.168.1.174 <<'ENDSSH'
+  mkdir .ssh
+  chmod 700 .ssh
+  cd .ssh
+  touch authorized_keys
+  chmod 600 authorized_keys
+  cat ../identity.pub >> authorized_keys
+  rm ../identity.pub
+ENDSSH

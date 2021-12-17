@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+sh scripts/build_container.sh
+sh scripts/generate_release.sh
+
+echo "
+---- Transferring files ----
+"
+scp -i /home/teifion/.ssh/id_rsa remote/dodeploy.sh root@192.168.1.104:/dodeploy.sh
+scp -i /home/teifion/.ssh/id_rsa remote/dodeploy.sh root@192.168.1.183:/dodeploy.sh
+scp -i /home/teifion/.ssh/id_rsa remote/dodeploy.sh root@192.168.1.198:/dodeploy.sh
+scp -i /home/teifion/.ssh/id_rsa remote/dodeploy.sh root@192.168.1.174:/dodeploy.sh
+
+scp -i /home/teifion/.ssh/id_rsa rel/artifacts/clustering.tar.gz root@192.168.1.104:/releases/clustering.tar.gz
+scp -i /home/teifion/.ssh/id_rsa rel/artifacts/clustering.tar.gz root@192.168.1.183:/releases/clustering.tar.gz
+scp -i /home/teifion/.ssh/id_rsa rel/artifacts/clustering.tar.gz root@192.168.1.198:/releases/clustering.tar.gz
+scp -i /home/teifion/.ssh/id_rsa rel/artifacts/clustering.tar.gz root@192.168.1.174:/releases/clustering.tar.gz
+
+echo "
+---- Running deployment scripts ----
+"
+ssh root@192.168.1.104 <<'ENDSSH'
+  sh /dodeploy.sh
+ENDSSH
+
+echo ""
+ssh root@192.168.1.183 <<'ENDSSH'
+  sh /dodeploy.sh
+ENDSSH
+
+echo ""
+ssh root@192.168.1.198 <<'ENDSSH'
+  sh /dodeploy.sh
+ENDSSH
+
+echo ""
+ssh root@192.168.1.174 <<'ENDSSH'
+  sh /dodeploy.sh
+ENDSSH
+
+echo "
+---- Local cleanup ----
+"
+mix phx.digest.clean --all
+
+
+echo "
+---- All done! ----
+"

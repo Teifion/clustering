@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+bin/deploy
+sleep 1
+bin/curl
