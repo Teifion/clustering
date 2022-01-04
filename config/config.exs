@@ -14,6 +14,9 @@ config :clustering, ClusteringWeb.Endpoint,
   pubsub_server: Clustering.PubSub,
   live_view: [signing_salt: "gkPwZuZF"]
 
+config :clustering, Clustering,
+  dev_mode: false
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

@@ -94,3 +94,4 @@ fi
 alias nginxlog="sudo tail /var/log/nginx/error.log -n 40 -f"
 alias sitelog="sudo tail /var/log/clustering/error.log -n 40 -f"
 alias siteinfo="sudo tail /var/log/clustering/info.log -n 40 -f"
+alias capp="/apps/clustering/bin/clustering"
