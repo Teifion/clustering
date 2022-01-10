@@ -13,7 +13,7 @@ defmodule Mix.Tasks.CInstall do
       System.shell("scp -i ~/.ssh/id_rsa remote/bashrc root@#{ip}:/root/.bashrc")
       System.shell(
 """
-ssh root@192.168.1.104 <<'ENDSSH'
+ssh root@#{ip} <<'ENDSSH'
   sh /install.sh
 ENDSSH
 """

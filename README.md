@@ -21,6 +21,14 @@ capp remote
 # Should now have an elixir shell into the running app
 ```
 
+# Stuff I did that I've not saved properly
+update /etc/hosts - https://medium.com/@priyantha.getc/elixir-how-to-invoke-remote-functions-d961985f3862
+
+echo '192.168.1.104       cbox1' >> /etc/hosts
+echo '192.168.1.183       cbox2' >> /etc/hosts
+echo '192.168.1.198       cbox3' >> /etc/hosts
+echo '192.168.1.174       cbox4' >> /etc/hosts
+
 # Sites/tutorials to use
 https://benjamintan.io/blog/2014/05/25/connecting-elixir-nodes-on-the-same-lan/
 https://zohaib.me/setting-up-elixir-cluster/
