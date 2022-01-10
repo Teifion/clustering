@@ -14,6 +14,8 @@ ssh root@192.168.1.104 <<'ENDSSH'
   chmod 600 authorized_keys
   cat ../identity.pub >> authorized_keys
   rm ../identity.pub
+  
+  hostnamectl set-hostname cbox1
 ENDSSH
 
 ssh root@192.168.1.183 <<'ENDSSH'
@@ -24,6 +26,8 @@ ssh root@192.168.1.183 <<'ENDSSH'
   chmod 600 authorized_keys
   cat ../identity.pub >> authorized_keys
   rm ../identity.pub
+  
+  hostnamectl set-hostname cbox2
 ENDSSH
 
 ssh root@192.168.1.198 <<'ENDSSH'
@@ -34,6 +38,8 @@ ssh root@192.168.1.198 <<'ENDSSH'
   chmod 600 authorized_keys
   cat ../identity.pub >> authorized_keys
   rm ../identity.pub
+  
+  hostnamectl set-hostname cbox3
 ENDSSH
 
 ssh root@192.168.1.174 <<'ENDSSH'
@@ -44,4 +50,6 @@ ssh root@192.168.1.174 <<'ENDSSH'
   chmod 600 authorized_keys
   cat ../identity.pub >> authorized_keys
   rm ../identity.pub
+  
+  hostnamectl set-hostname cbox4
 ENDSSH

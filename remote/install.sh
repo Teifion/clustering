@@ -9,9 +9,6 @@ yum -y autoremove
 systemctl enable --now snapd.socket
 ln -s /var/lib/snapd/snap /snap
 
-# Set a new hostname
-hostnamectl set-hostname $(( $RANDOM % 8999 + 1000 ))
-
 ### Nginx
 yum install -y nginx
 chmod +r /var/log/nginx
