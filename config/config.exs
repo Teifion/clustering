@@ -15,7 +15,8 @@ config :clustering, ClusteringWeb.Endpoint,
   live_view: [signing_salt: "gkPwZuZF"]
 
 config :clustering, Clustering,
-  dev_mode: false
+  dev_mode: false,
+  ips: ~w(192.168.1.104 192.168.1.183 192.168.1.198 192.168.1.174)
 
 # Configures the mailer
 #

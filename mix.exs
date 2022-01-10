@@ -47,6 +47,7 @@ defmodule Clustering.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:logger_file_backend, "~> 0.0.10"},
+      {:parallel, "~> 0.0"},
     ]
   end
 
