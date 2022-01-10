@@ -1,13 +1,20 @@
 defmodule ClusteringWeb.Router do
   use ClusteringWeb, :router
 
-  pipeline :browser do
+  pipeline :unsafe_browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {ClusteringWeb.LayoutView, :blank}
-    # plug :protect_from_forgery
-    # plug :put_secure_browser_headers
+  end
+
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, {ClusteringWeb.LayoutView, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
   end
 
   pipeline :api do
@@ -15,9 +22,15 @@ defmodule ClusteringWeb.Router do
   end
 
   scope "/", ClusteringWeb do
-    pipe_through :browser
+    pipe_through :unsafe_browser
 
     get "/", PageController, :index
+  end
+
+  scope "/", ClusteringWeb do
+    pipe_through :browser
+
+    live "/live", MainPageLive
   end
 
   # Other scopes may use custom stacks.
@@ -38,18 +51,6 @@ defmodule ClusteringWeb.Router do
     scope "/" do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: ClusteringWeb.Telemetry
-    end
-  end
-
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
-  if Mix.env() == :dev do
-    scope "/dev" do
-      pipe_through :browser
-
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 end

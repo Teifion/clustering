@@ -12,6 +12,7 @@ import Config
 config :clustering, ClusteringWeb.Endpoint,
   url: [host: "example.com"],
   http: [port: 8888, otp_app: :clustering],
+  check_origin: false,
   root: ".",
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: "4xBYongBWwnJC1OPu8DQOyzkn5AicPVME4cn0WxkVybrYwiXBCqeLP0C7J77o/Hu",

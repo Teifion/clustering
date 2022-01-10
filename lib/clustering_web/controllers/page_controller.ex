@@ -8,9 +8,10 @@ defmodule ClusteringWeb.PageController do
       |> render("iframe.html")
     else
       conn
-      |> put_layout(:blank)
-      |> assign(:random_number, 7259)
-      |> render("index.html")
+      # |> put_layout(:blank)
+      # |> assign(:random_number, 7259)
+      # |> render("index.html")
+      |> redirect(to: Routes.live_path(conn, ClusteringWeb.MainPageLive))
     end
   end
 end

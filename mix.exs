@@ -40,7 +40,6 @@ defmodule Clustering.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.5"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
@@ -48,6 +47,7 @@ defmodule Clustering.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:logger_file_backend, "~> 0.0.10"},
       {:parallel, "~> 0.0"},
+      {:con_cache, "~> 1.0"},
     ]
   end
 

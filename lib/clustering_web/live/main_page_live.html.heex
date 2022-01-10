@@ -1,0 +1,63 @@
+<style type="text/css">
+  table { 
+  }
+  
+  table td {
+    padding: 3px;
+    border-bottom: 1px solid #000;
+  }
+  
+  .btn {
+    cursor: pointer;
+  }
+</style>
+
+<h4><%= Node.self() %></h4>
+
+<table class='table' id="main-item">
+  <tbody>
+    <tr>
+      <td>State var</td>
+      <td><%= @state_var %></td>
+      <td>
+        <span class="btn" phx-click="state_var:up">
+          Up
+        </span>
+      </td>
+      <td>
+        <span class="btn" phx-click="state_var:down">
+          Down
+        </span>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>App var</td>
+      <td><%= @app_var %></td>
+      <td>
+        <span class="btn" phx-click="app_var:up">
+          Up
+        </span>
+      </td>
+      <td>
+        <span class="btn" phx-click="app_var:down">
+          Down
+        </span>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>Pubsub events</td>
+      <td><%= @pubsub_count %></td>
+      <td>
+        
+      </td>
+      <td>
+        
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Nodes: <%= Kernel.inspect @nodes %>
+

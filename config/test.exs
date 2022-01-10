@@ -20,9 +20,6 @@ config :clustering, ClusteringWeb.Endpoint,
   secret_key_base: "JChd4DNd69Eo3KMptn9uW1ZFdbL6wobMY42TbsaW5apRIAmdmWbYAZO+5v8irTbI",
   server: false
 
-# In test we don't send emails.
-config :clustering, Clustering.Mailer, adapter: Swoosh.Adapters.Test
-
 # Print only warnings and errors during test
 config :logger, level: :warn
 

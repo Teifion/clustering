@@ -14,9 +14,12 @@ defmodule Clustering.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Clustering.PubSub},
       # Start the Endpoint (http/https)
-      ClusteringWeb.Endpoint
+      ClusteringWeb.Endpoint,
+      Clustering.NodeServer,
       # Start a worker by calling: Clustering.Worker.start_link(arg)
       # {Clustering.Worker, arg}
+
+      concache_perm_sup(:app_cache),
     ]
 
     Logger.info("Starting app")
@@ -33,5 +36,18 @@ defmodule Clustering.Application do
   def config_change(changed, _new, removed) do
     ClusteringWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp concache_perm_sup(name) do
+    Supervisor.child_spec(
+      {
+        ConCache,
+        [
+          name: name,
+          ttl_check_interval: false
+        ]
+      },
+      id: {ConCache, name}
+    )
   end
 end
