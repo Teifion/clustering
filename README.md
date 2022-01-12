@@ -29,9 +29,12 @@ echo '192.168.1.183       cbox2' >> /etc/hosts
 echo '192.168.1.198       cbox3' >> /etc/hosts
 echo '192.168.1.174       cbox4' >> /etc/hosts
 
-# Sites/tutorials to use
+# Sites/tutorials to use for setup
 https://benjamintan.io/blog/2014/05/25/connecting-elixir-nodes-on-the-same-lan/
 https://zohaib.me/setting-up-elixir-cluster/
 https://elixirschool.com/en/lessons/advanced/otp-distribution/
 https://medium.com/@jmerriweather/elixir-phoenix-amnesia-multi-node-451e8565da1d
+
+# Sites/tutorials post setup
+https://dashbit.co/blog/you-may-not-need-redis-with-elixir - https://github.com/bitwalker/libcluster
 

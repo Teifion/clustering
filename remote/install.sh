@@ -12,6 +12,7 @@ ln -s /var/lib/snapd/snap /snap
 ### Nginx
 yum install -y nginx
 chmod +r /var/log/nginx
+systemctl enable nginx
 systemctl start nginx
 
 ### Nginx config
@@ -62,42 +63,49 @@ cat >> /etc/nginx/sites-enabled/clustering << EOF
 upstream clustering {
     server 127.0.0.1:8888;
 }
-# The following map statement is required
-# if you plan to support channels. See https://www.nginx.com/blog/websocket-nginx/
-map $http_upgrade $connection_upgrade {
-    default upgrade;
-    '' close;
-}
-server {
-    client_max_body_size 0;
-    listen 80 http;
-
-    # server_name yourdomain.com;
-    
-    location = /favicon.ico {
-      alias /var/www/favicon.ico;
-    }
-    
-    location / {
-        try_files $uri @proxy;
-    }
-    
-    location @proxy {
-        include proxy_params;
-        proxy_redirect off;
-        proxy_pass https://clustering;
-        proxy_http_version 1.1;
-        proxy_headers_hash_max_size 512;
-        
-        # The following two headers need to be set in order
-        # to keep the websocket connection open. Otherwise you'll see
-        # HTTP 400's being returned from websocket connections.
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
 EOF
+
+
+# cat >> /etc/nginx/sites-enabled/clustering EOF
+# upstream clustering {
+#     server 127.0.0.1:8888;
+# }
+# # The following map statement is required
+# # if you plan to support channels. See https://www.nginx.com/blog/websocket-nginx/
+# map $http_upgrade $connection_upgrade {
+#     default upgrade;
+#     '' close;
+# }
+# server {
+#     client_max_body_size 0;
+#     listen 80 http;
+
+#     # server_name yourdomain.com;
+
+#     location = /favicon.ico {
+#       alias /var/www/favicon.ico;
+#     }
+
+#     location / {
+#         try_files $uri @proxy;
+#     }
+
+#     location @proxy {
+#         include proxy_params;
+#         proxy_redirect off;
+#         proxy_pass https://clustering;
+#         proxy_http_version 1.1;
+#         proxy_headers_hash_max_size 512;
+
+#         # The following two headers need to be set in order
+#         # to keep the websocket connection open. Otherwise you'll see
+#         # HTTP 400's being returned from websocket connections.
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection $connection_upgrade;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#     }
+# }
+# EOF
 
 # Directories
 mkdir -p /releases
@@ -136,5 +144,4 @@ iptables -P FORWARD ACCEPT
 iptables -F
 
 # Secure linux
-# semanage port -a -t http_port_t -p tcp 80
 semanage port -a -t http_port_t -p tcp 8888

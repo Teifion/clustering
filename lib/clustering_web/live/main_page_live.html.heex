@@ -9,6 +9,8 @@
   
   .btn {
     cursor: pointer;
+    border: 1px solid #AAA;
+    padding: 3px;
   }
 </style>
 
@@ -60,4 +62,15 @@
 </table>
 
 Nodes: <%= Kernel.inspect @nodes %>
+<br /><br />
 
+<%= for i <- Range.new(0, @node_count-1) do %>
+  <span class="btn" phx-click={"transfer:#{i}"}>
+    Tranfer to <%= i + 1 %>
+  </span>
+  &nbsp;&nbsp;
+<% end %>
+
+<span class="btn" phx-click="transfer">
+  Random
+</span>

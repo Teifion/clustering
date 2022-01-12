@@ -31,6 +31,7 @@ defmodule ClusteringWeb.Router do
     pipe_through :browser
 
     live "/live", MainPageLive
+    live "/live/:id", MainPageLive
   end
 
   # Other scopes may use custom stacks.
