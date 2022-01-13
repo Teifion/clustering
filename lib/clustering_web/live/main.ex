@@ -50,6 +50,10 @@ defmodule ClusteringWeb.MainPageLive do
   end
 
   @impl true
+  def handle_info({:nodes_added, _}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_info(:nodes_updated, socket) do
     socket = socket
       |> assign(:nodes, Node.list())

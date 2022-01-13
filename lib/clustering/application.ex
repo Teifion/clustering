@@ -15,7 +15,8 @@ defmodule Clustering.Application do
       {Phoenix.PubSub, name: Clustering.PubSub},
       # Start the Endpoint (http/https)
       ClusteringWeb.Endpoint,
-      Clustering.NodeServer,
+      {Clustering.NodeServer, name: Clustering.NodeServer},
+      {Clustering.DbServer, name: Clustering.DbServer},
       # Start a worker by calling: Clustering.Worker.start_link(arg)
       # {Clustering.Worker, arg}
 
@@ -23,10 +24,12 @@ defmodule Clustering.Application do
     ]
 
     Logger.info("Starting app")
+    Application.put_env(:elixir, :ansi_enabled, true)
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Clustering.Supervisor]
+
     Supervisor.start_link(children, opts)
   end
 

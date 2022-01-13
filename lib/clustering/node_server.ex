@@ -20,7 +20,8 @@ defmodule Clustering.NodeServer do
       if not Enum.member?(existing, n) do
         case Node.connect(n) do
           true ->
-            Logger.info("Connected to #{n}")
+            :ok
+            # Logger.info("Connected to #{n}")
           _v ->
             # Logger.info("Not got node #{n}, unable to connect (got #{v})")
             :ok
@@ -34,12 +35,29 @@ defmodule Clustering.NodeServer do
       :nodes_updated
     )
 
-    {:noreply, state}
+    new_state = if Enum.count(@expected_nodes) == Enum.count([node() | Node.list()]) do
+      if state.nodes_added do
+        state
+      else
+        PubSub.broadcast(
+          Clustering.PubSub,
+          "internal",
+          {:nodes_added, node()}
+        )
+        %{state | nodes_added: true}
+      end
+    else
+      state
+    end
+
+    {:noreply, new_state}
   end
 
   @spec init(Map.t()) :: {:ok, Map.t()}
   def init(_opts) do
     :timer.send_interval(1_000, :tick)
-    {:ok, %{}}
+    {:ok, %{
+      nodes_added: false
+    }}
   end
 end
