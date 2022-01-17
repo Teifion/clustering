@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.CInstall do
+defmodule Mix.Tasks.Install do
   @moduledoc false
   use Mix.Task
   require Logger

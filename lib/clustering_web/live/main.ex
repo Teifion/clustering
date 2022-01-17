@@ -4,12 +4,12 @@ defmodule ClusteringWeb.MainPageLive do
   require Logger
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     app_var = ConCache.get_or_store(:app_cache, :key, fn ->
       0
     end)
 
-    :ok = PubSub.subscribe(Clustering.PubSub, "internal")
+    :ok = PubSub.subscribe(Clustering.PubSub, "live_internal")
 
     page_title = Node.self()
       |> to_string
@@ -51,6 +51,22 @@ defmodule ClusteringWeb.MainPageLive do
 
   @impl true
   def handle_info({:nodes_added, _}, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info({:db_started, _}, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info(:start_amnesia, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info(:stop_amnesia, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info({:start_db, _}, socket) do
     {:noreply, socket}
   end
 
