@@ -4,14 +4,14 @@ Setup 4 virtual machine boxes running centos 7. Currently you will need to find-
 ```
 chmod -R +x bin/
 bin/setup
-bin/install
+mix install
 ```
 
 ## Usage
 ```
-bin/deploy
+mix deploy
 mix phx.server
-# open http://localhost:4000/
+# open http://localhost:4000/, click on a link to one of the VM sites, e.g. http://192.168.1.104:8888
 ```
 
 ## Interactive

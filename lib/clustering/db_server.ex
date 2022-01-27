@@ -1,5 +1,7 @@
 defmodule Clustering.DbServer do
-  @moduledoc false
+  @moduledoc """
+  Genserver responsible for managing the starting/schemaing of the database
+  """
   use GenServer
   alias Phoenix.PubSub
   require Logger
@@ -17,7 +19,14 @@ defmodule Clustering.DbServer do
 
   def handle_info({:mnesia, :all_nodes_added}, state) do
     Logger.info("All nodes added")
-    :mnesia.change_config(:extra_db_nodes, Node.list())
+    {:noreply, state}
+  end
+
+  def handle_info({:mnesia, :create}, state) do
+    Logger.info("Creating db")
+
+    r = Amnesia.Table.create(KVPair, [attributes: [:id, :key, :value]])
+    Logger.info(Kernel.inspect r)
     {:noreply, state}
   end
 
@@ -35,6 +44,17 @@ defmodule Clustering.DbServer do
 
     Amnesia.Schema.create([Node.self()])
     Amnesia.start
+
+    PubSub.broadcast(
+      Clustering.PubSub,
+      "mnesia",
+      {:mnesia, :create}
+    )
+
+    # r = Amnesia.Table.create(KVPair, [attributes: [:id, :key, :value]])
+    # IO.puts "Creating table"
+    # IO.inspect r
+    # IO.puts ""
 
     # :mnesia.change_config(:extra_db_nodes, Node.list())
 

@@ -29,3 +29,9 @@ Amnesia.Schema.create(nodes)
 
 # Copies the tables across
 [{Tb, mnesia:add_table_copy(Tb, node(), Type)} || {Tb, [{'a@node', Type}]} <- [{T, mnesia:table_info(T, where_to_commit)} || T <- mnesia:system_info(tables)]].
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+Clustering.destroy()# Stops Amnesia and wipes it all
+Amnesia.Schema.print(KVPair)# Prints info about the table we care about
