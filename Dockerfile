@@ -1,7 +1,7 @@
 FROM centos:7
 
-ENV ELIXIR_VERSION=1.12
-ENV ERLANG_VERSION=24.0.5
+ENV ELIXIR_VERSION=1.13.2
+ENV ERLANG_VERSION=24.2.1
 ENV ERL_AFLAGS="-kernel shell_history enabled"
 
 ARG DISABLED_APPS="megaco wx debugger jinterface orber reltool observer et"

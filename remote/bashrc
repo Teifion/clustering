@@ -91,7 +91,7 @@ if ! shopt -q login_shell ; then # We're not a login shell
 fi
 # vim:ts=4:sw=4
 
-alias nginxlog="multitail /var/log/nginx/error.log -n 40 -f"
-alias sitelog="multitail /var/log/clustering/error.log -n 40 -f"
-alias siteinfo="multitail /var/log/clustering/info.log -n 40 -f"
+alias nginxlog="tail /var/log/nginx/error.log -n 40 -f"
+alias sitelog="tail /var/log/clustering/error.log -n 40 -f"
+alias siteinfo="tail /var/log/clustering/info.log -n 40 -f"
 alias capp="/apps/clustering/bin/clustering"

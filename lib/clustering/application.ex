@@ -20,6 +20,8 @@ defmodule Clustering.Application do
       # Start a worker by calling: Clustering.Worker.start_link(arg)
       # {Clustering.Worker, arg}
 
+      {DynamicSupervisor, strategy: :one_for_one, name: Clustering.DynamicCacheSupervisor},
+
       concache_perm_sup(:app_cache),
     ]
 
