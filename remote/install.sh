@@ -3,7 +3,7 @@
 yum install epel-release -y
 
 yum update -y
-yum -y install htop git-core ca-certificates vim curl vnstat net-tools wget epel-release snapd grc
+yum -y install htop git-core ca-certificates vim curl vnstat net-tools wget epel-release snapd
 yum -y upgrade
 yum -y autoremove
 systemctl enable --now snapd.socket

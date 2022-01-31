@@ -9,6 +9,10 @@ defmodule Clustering.NodeServer do
 
   @expected_nodes ~w(clustering@cbox1 clustering@cbox2 clustering@cbox3 clustering@cbox4)a
 
+  def node_list do
+    @expected_nodes
+  end
+
   @spec start_link(List.t()) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts[:data], [])

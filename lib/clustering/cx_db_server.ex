@@ -18,21 +18,16 @@ defmodule Clustering.DbServer do
   def handle_info(:start_caches, state) do
     DynamicSupervisor.start_child(Clustering.DynamicCacheSupervisor, {
       Cachex,
-      name: :store_a
-    })
-
-    DynamicSupervisor.start_child(Clustering.DynamicCacheSupervisor, {
-      Cachex,
-      name: :store_b
+      name: :state_vars,
+      nodes: Clustering.NodeServer.node_list()
     })
 
     {:noreply, state}
   end
 
   def x do
-    Cachex.put(:store_a, "key", "value")
-    Cachex.get!(:store_a, "key")
-    Cachex.get!(:store_b, "key")
+    Cachex.put(:state_vars, "key", "value")
+    Cachex.get(:state_vars, "key")
   end
 
   @spec init(Map.t()) :: {:ok, Map.t()}

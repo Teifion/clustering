@@ -28,10 +28,9 @@ defmodule ClusteringWeb.MainPageLive do
     {:ok, socket}
   end
 
+  @impl true
   def handle_params(%{"id" => id}, _opts, socket) do
-    state_var = ConCache.get_or_store(:app_cache, id, fn ->
-      0
-    end)
+    state_var = Cachex.get!(:state_vars, id) || 0
 
     {:noreply,
       socket
@@ -101,9 +100,8 @@ defmodule ClusteringWeb.MainPageLive do
     }
   end
 
-  def handle_event("state_var:up", _event, socket) do
-    new_value = ConCache.get(:app_cache, socket.assigns[:id]) + 1
-    ConCache.put(:app_cache, socket.assigns[:id], new_value)
+  def handle_event("state_var:up", _event, %{assigns: %{id: id}} = socket) do
+    {:ok, new_value} = Cachex.incr(:state_vars, id)
 
     socket = socket
       |> assign(:state_var, new_value)
@@ -111,9 +109,8 @@ defmodule ClusteringWeb.MainPageLive do
     {:noreply, socket}
   end
 
-  def handle_event("state_var:down", _event, socket) do
-    new_value = ConCache.get(:app_cache, socket.assigns[:id]) - 1
-    ConCache.put(:app_cache, socket.assigns[:id], new_value)
+  def handle_event("state_var:down", _event, %{assigns: %{id: id}} = socket) do
+    {:ok, new_value} = Cachex.decr(:state_vars, id)
 
     socket = socket
       |> assign(:state_var, new_value)
