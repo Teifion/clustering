@@ -8,6 +8,13 @@ defmodule Clustering.Application do
 
   @impl true
   def start(_type, _args) do
+    topologies = [
+      example: [
+        strategy: Cluster.Strategy.Epmd,
+        config: [hosts: ~w(clustering@cbox1 clustering@cbox2 clustering@cbox3 clustering@cbox4)a],
+      ]
+    ]
+
     children = [
       # Start the Telemetry supervisor
       ClusteringWeb.Telemetry,
@@ -15,12 +22,13 @@ defmodule Clustering.Application do
       {Phoenix.PubSub, name: Clustering.PubSub},
       # Start the Endpoint (http/https)
       ClusteringWeb.Endpoint,
-      {Clustering.NodeServer, name: Clustering.NodeServer},
-      {Clustering.DbServer, name: Clustering.DbServer},
+      # {Clustering.DbServer, name: Clustering.DbServer},
       # Start a worker by calling: Clustering.Worker.start_link(arg)
       # {Clustering.Worker, arg}
 
-      {DynamicSupervisor, strategy: :one_for_one, name: Clustering.DynamicCacheSupervisor},
+      # {DynamicSupervisor, strategy: :one_for_one, name: Clustering.DynamicCacheSupervisor},
+
+      {Cluster.Supervisor, [topologies, [name: MyApp.ClusterSupervisor]]},
 
       concache_perm_sup(:app_cache),
     ]

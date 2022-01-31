@@ -38,3 +38,8 @@ https://medium.com/@jmerriweather/elixir-phoenix-amnesia-multi-node-451e8565da1d
 # Sites/tutorials post setup
 https://dashbit.co/blog/you-may-not-need-redis-with-elixir - https://github.com/bitwalker/libcluster
 
+
+# Swarm
+https://hexdocs.pm/swarm/readme.html
+https://github.com/bitwalker/libcluster - makes use of libcluster which is way better than my adhoc genserver method
+https://stephenbussey.com/2019/01/29/distributed-in-memory-caching-in-elixir.html - https://gist.github.com/sb8244/371335946d444bd8c5786571cacef4d6

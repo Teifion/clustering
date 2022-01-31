@@ -50,6 +50,8 @@ defmodule Clustering.MixProject do
       {:con_cache, "~> 1.0"},
       # {:amnesia, "~> 0.2.8"},
       {:cachex, "~> 3.4"},
+      {:libcluster, "~> 3.3"},
+      {:swarm, "~> 3.0"},
     ]
   end
 
