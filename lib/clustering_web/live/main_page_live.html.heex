@@ -19,43 +19,32 @@
 <table class='table' id="main-item">
   <tbody>
     <tr>
-      <td>State var</td>
-      <td><%= @state_var %></td>
+      <td>Node var</td>
+      <td><%= @node_var %></td>
       <td>
-        <span class="btn" phx-click="state_var:up">
+        <span class="btn" phx-click="node_var:up">
           Up
         </span>
       </td>
       <td>
-        <span class="btn" phx-click="state_var:down">
+        <span class="btn" phx-click="node_var:down">
           Down
         </span>
       </td>
     </tr>
     
     <tr>
-      <td>App var</td>
-      <td><%= @app_var %></td>
+      <td>Shared var</td>
+      <td><%= @shared_var %></td>
       <td>
-        <span class="btn" phx-click="app_var:up">
+        <span class="btn" phx-click="shared_var:up">
           Up
         </span>
       </td>
       <td>
-        <span class="btn" phx-click="app_var:down">
+        <span class="btn" phx-click="shared_var:down">
           Down
         </span>
-      </td>
-    </tr>
-    
-    <tr>
-      <td>Pubsub events</td>
-      <td><%= @pubsub_count %></td>
-      <td>
-        
-      </td>
-      <td>
-        
       </td>
     </tr>
   </tbody>

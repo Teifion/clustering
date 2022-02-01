@@ -48,10 +48,7 @@ defmodule Clustering.MixProject do
       {:logger_file_backend, "~> 0.0.10"},
       {:parallel, "~> 0.0"},
       {:con_cache, "~> 1.0"},
-      # {:amnesia, "~> 0.2.8"},
-      {:cachex, "~> 3.4"},
       {:libcluster, "~> 3.3"},
-      {:swarm, "~> 3.0"},
     ]
   end
 

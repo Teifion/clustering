@@ -22,16 +22,13 @@ defmodule Clustering.Application do
       {Phoenix.PubSub, name: Clustering.PubSub},
       # Start the Endpoint (http/https)
       ClusteringWeb.Endpoint,
-      # {Clustering.DbServer, name: Clustering.DbServer},
-      # Start a worker by calling: Clustering.Worker.start_link(arg)
-      # {Clustering.Worker, arg}
-
-      # {DynamicSupervisor, strategy: :one_for_one, name: Clustering.DynamicCacheSupervisor},
+      Clustering.DbServer,
 
       # Note the name of Cluster.Supervisor is from libcluster, not the Clustering app
       {Cluster.Supervisor, [topologies, [name: Clustering.SwarmSupervisor]]},
 
-      concache_perm_sup(:app_cache),
+      concache_perm_sup(:node_cache),
+      concache_perm_sup(:shared_cache),
     ]
 
     Logger.info("Starting app")

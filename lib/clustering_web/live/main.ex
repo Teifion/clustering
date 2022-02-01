@@ -5,36 +5,34 @@ defmodule ClusteringWeb.MainPageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    app_var = ConCache.get_or_store(:app_cache, :key, fn ->
-      0
-    end)
-
-    :ok = PubSub.subscribe(Clustering.PubSub, "live_internal")
-
     page_title = Node.self()
       |> to_string
       |> String.split("@")
       |> Enum.at(1)
 
     socket = socket
-    |> assign(:state_var, 0)
-    |> assign(:app_var, app_var)
-    |> assign(:pubsub_count, 0)
-    |> assign(:nodes, Node.list())
-    |> assign(:page_title, page_title)
-    |> assign(:node_count, Enum.count(Application.get_env(:clustering, Clustering)[:ips]))
-    |> assign(:id, nil)
+      |> assign(:node_var, 0)
+      |> assign(:shared_var, 0)
+      |> assign(:pubsub_count, 0)
+      |> assign(:nodes, Node.list())
+      |> assign(:page_title, page_title)
+      |> assign(:node_count, Enum.count(Application.get_env(:clustering, Clustering)[:ips]))
+      |> assign(:id, nil)
 
     {:ok, socket}
   end
 
   @impl true
   def handle_params(%{"id" => id}, _opts, socket) do
-    state_var = Cachex.get!(:state_vars, id) || 0
+    node_var = ConCache.get_or_store(:node_cache, id, fn -> 0 end)
+    shared_var = ConCache.get(:shared_cache, id) || 0
+
+    :ok = PubSub.subscribe(Clustering.PubSub, "ets_updates:shared_cache/#{id}")
 
     {:noreply,
       socket
-      |> assign(:state_var, state_var)
+      |> assign(:node_var, node_var)
+      |> assign(:shared_var, shared_var)
       |> assign(:id, id)
     }
   end
@@ -49,31 +47,15 @@ defmodule ClusteringWeb.MainPageLive do
   end
 
   @impl true
-  def handle_info({:nodes_added, _}, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_info({:db_started, _}, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_info(:start_amnesia, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_info(:stop_amnesia, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_info({:start_db, _}, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_info(:nodes_updated, socket) do
-    socket = socket
-      |> assign(:nodes, Node.list())
-
-    {:noreply, socket}
+  def handle_info({:ets_update, :update_value, key, value}, %{assigns: %{id: id}} = socket) do
+    if key == id do
+      {:noreply,
+        socket
+          |> assign(:shared_var, value)
+      }
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
@@ -100,40 +82,44 @@ defmodule ClusteringWeb.MainPageLive do
     }
   end
 
-  def handle_event("state_var:up", _event, %{assigns: %{id: id}} = socket) do
-    {:ok, new_value} = Cachex.incr(:state_vars, id)
+  def handle_event("node_var:up", _event, %{assigns: %{id: id, node_var: node_var}} = socket) do
+    new_value = node_var + 1
+    ConCache.put(:node_cache, id, new_value)
 
     socket = socket
-      |> assign(:state_var, new_value)
+      |> assign(:node_var, new_value)
 
     {:noreply, socket}
   end
 
-  def handle_event("state_var:down", _event, %{assigns: %{id: id}} = socket) do
-    {:ok, new_value} = Cachex.decr(:state_vars, id)
+  def handle_event("node_var:down", _event, %{assigns: %{id: id, node_var: node_var}} = socket) do
+    new_value = node_var - 1
+    ConCache.put(:node_cache, id, new_value)
 
     socket = socket
-      |> assign(:state_var, new_value)
+      |> assign(:node_var, new_value)
 
     {:noreply, socket}
   end
 
-  def handle_event("app_var:up", _event, socket) do
-    new_value = ConCache.get(:app_cache, :key) + 1
-    ConCache.put(:app_cache, :key, new_value)
-
-    socket = socket
-      |> assign(:app_var, new_value)
+  def handle_event("shared_var:up", _event, %{assigns: %{id: id, shared_var: shared_var}} = socket) do
+    new_value = shared_var + 1
+    PubSub.broadcast(
+      Clustering.PubSub,
+      "ets_updates",
+      {:update_value, :shared_cache, id, new_value}
+    )
 
     {:noreply, socket}
   end
 
-  def handle_event("app_var:down", _event, socket) do
-    new_value = ConCache.get(:app_cache, :key) - 1
-    ConCache.put(:app_cache, :key, new_value)
-
-    socket = socket
-      |> assign(:app_var, new_value)
+  def handle_event("shared_var:down", _event, %{assigns: %{id: id, shared_var: shared_var}} = socket) do
+    new_value = shared_var - 1
+    PubSub.broadcast(
+      Clustering.PubSub,
+      "ets_updates",
+      {:update_value, :shared_cache, id, new_value}
+    )
 
     {:noreply, socket}
   end
