@@ -28,7 +28,8 @@ defmodule Clustering.Application do
 
       # {DynamicSupervisor, strategy: :one_for_one, name: Clustering.DynamicCacheSupervisor},
 
-      {Cluster.Supervisor, [topologies, [name: MyApp.ClusterSupervisor]]},
+      # Note the name of Cluster.Supervisor is from libcluster, not the Clustering app
+      {Cluster.Supervisor, [topologies, [name: Clustering.SwarmSupervisor]]},
 
       concache_perm_sup(:app_cache),
     ]
