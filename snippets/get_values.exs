@@ -1,3 +1,21 @@
+# Swarm
+Supervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: "124"]})
+Supervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: "125"]})
+
+
+Supervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: "1"]})
+Supervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: "2"]})
+
+name = "123"
+Swarm.register_name("ValueServer:123", Clustering, :register_value_server, ["123"])
+Swarm.register_name("ValueServer:124", Clustering, :register_value_server, ["124"])
+
+Swarm.join(:foo, pid)
+
+:sys.get_state(Swarm.Tracker)
+
+
+
 # Using Horde
 Clustering.start_value_server("123")
 
@@ -29,4 +47,4 @@ Registry.lookup(Clustering.ValueRegistry, "ValueServer:123")
 name = "ValueServer:123"
 {:ok, pid} = Swarm.register_name(name, Clustering.ValueSupervisor, :register, [key: "123"])
 
-:sys.get_state(Swarm.Tracker)
+# :sys.get_state(Swarm.Tracker)

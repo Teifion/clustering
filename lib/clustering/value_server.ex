@@ -10,7 +10,8 @@ defmodule Clustering.ValueServer do
   # GenServer.call(via, :get_state)
 
   def start_link(key) do
-    case GenServer.start_link(__MODULE__, [key: key], name: via_tuple(key), key: key) do
+    name = {:via, :swarm, "ValueServer:#{key}"}
+    case GenServer.start_link(__MODULE__, [key: key], name: name) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -20,9 +21,9 @@ defmodule Clustering.ValueServer do
     end
   end
 
-  defp via_tuple(key) do
-    {:via, Horde.Registry, {Clustering.ValueRegistry, "ValueServer:#{key}"}}
-  end
+  # defp via_tuple(key) do
+  #   {:via, Horde.Registry, {Clustering.ValueRegistry, "ValueServer:#{key}"}}
+  # end
 
   def new_server(key) do
     Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
@@ -57,6 +58,7 @@ defmodule Clustering.ValueServer do
   end
 
   @impl true
+  @spec init(nil | maybe_improper_list | map) :: {:ok, %{key: any, value: nil}}
   def init(opts) do
     key = opts[:key]
 
@@ -71,11 +73,19 @@ defmodule Clustering.ValueServer do
   def child_spec(opts) do
     key = opts[:key]
 
+    # %{
+    #   id: "ValueServer:#{key}",
+    #   start: {__MODULE__, :start_link, [key]},
+    #   shutdown: 10_000,
+    #   restart: :transient
+    # }
+
     %{
-      id: "ValueServer:#{key}",
+      id: __MODULE__,
       start: {__MODULE__, :start_link, [key]},
-      shutdown: 10_000,
-      restart: :transient
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
     }
   end
 end

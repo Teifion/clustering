@@ -9,9 +9,10 @@ defmodule Clustering.Application do
   @impl true
   def start(_type, _args) do
     topologies = [
-      example: [
+      cbox: [
         strategy: Cluster.Strategy.Epmd,
-        config: [hosts: ~w(clustering@cbox1 clustering@cbox2 clustering@cbox3 clustering@cbox4)a],
+        # config: [hosts: ~w(clustering@cbox1 clustering@cbox2 clustering@cbox3 clustering@cbox4)a],
+        config: [hosts: [:nonode@nohost]],
       ]
     ]
 
@@ -24,14 +25,18 @@ defmodule Clustering.Application do
       ClusteringWeb.Endpoint,
       Clustering.DbServer,
 
-      # Note the name of Cluster.Supervisor is from libcluster, not the Clustering app
-      {Cluster.Supervisor, [topologies, [name: Clustering.LibClusterSupervisor]]},
+      # Swarm
+      # Swarm.whereis_or_register_name(Clustering.ValueServer, Clustering.ValueServer, :start_link, [])
+      {Cluster.Supervisor, [topologies, [name: Clustering.ValueSupervisor]]},
 
-      {Horde.Registry, [name: Clustering.ValueRegistry, keys: :unique]},
-      {Horde.DynamicSupervisor, [name: Clustering.ValueSupervisor, strategy: :one_for_one]},
+      # Horde
+      # Note the name of Cluster.Supervisor is from libcluster, not the Clustering app
+      # {Cluster.Supervisor, [topologies, [name: Clustering.LibClusterSupervisor]]},
+      # {Horde.Registry, [name: Clustering.ValueRegistry, keys: :unique]},
+      # {Horde.DynamicSupervisor, [name: Clustering.ValueSupervisor, strategy: :one_for_one]},
 
       # {DynamicSupervisor, strategy: :one_for_one, name: Clustering.ValueSupervisor},
-      {Clustering.CoordinatorServer, name: Clustering.CoordinatorServer},
+      # {Clustering.CoordinatorServer, name: Clustering.CoordinatorServer},
 
       concache_perm_sup(:node_cache),
       concache_perm_sup(:shared_cache),

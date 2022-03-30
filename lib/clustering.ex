@@ -11,19 +11,40 @@ defmodule Clustering do
 
   # def start_value_server(key) do
   #   result =
-  #     DynamicSupervisor.start_child(Clustering.ValueSupervisor, {
-  #       Clustering.ValueServer,
-  #       name: via_tuple("ValueServer:#{key}", key),
-  #       data: %{
-  #         key: key,
-  #       }
-  #     })
+      # DynamicSupervisor.start_child(Clustering.ValueSupervisor, {
+      #   Clustering.ValueServer,
+      #   name: via_tuple("ValueServer:#{key}", key),
+      #   data: %{
+      #     key: key,
+      #   }
+      # })
 
   #   Logger.info(Kernel.inspect result)
   # end
 
   def start_value_server(key) do
+    DynamicSupervisor.start_child(Clustering.ValueSupervisor, {
+      Clustering.ValueServer,
+      name: "ValueServer:123",
+      data: %{
+        key: "123",
+      }
+    })
+
     Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
+  end
+
+  def register_value_server(key) do
+    {:ok, _pid} = Supervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
+  end
+
+  def start_value_server(key) do
+    # {:ok, pid} = Swarm.register_name("ValueServer:#{123}", Clustering, :register_value_server, ["ValueServer:#{123}"])
+
+    name = "ValueServer:#{key}"
+    {:ok, pid} = Swarm.register_name(name, Clustering, :register_value_server, [name])
+
+    Swarm.join(:foo, pid)
   end
 
   # defp via_tuple(key) do
