@@ -3,8 +3,10 @@ defmodule Clustering.ValueServer do
   alias Phoenix.PubSub
   require Logger
 
-  def start_link(key) do
-    case GenServer.start_link(__MODULE__, [key: key], name: via_tuple(key)) do
+  def start_link(opts) do
+    Logger.info("start_link - #{Kernel.inspect opts}")
+
+    case GenServer.start_link(__MODULE__, opts, name: via_tuple(opts[:key])) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -48,22 +50,27 @@ defmodule Clustering.ValueServer do
 
   @impl true
   def init(opts) do
+    Logger.info("init - #{Kernel.inspect opts}")
+
     key = opts[:key]
 
     :ok = PubSub.subscribe(Clustering.PubSub, "ets_updates")
 
     {:ok, %{
       key: key,
-      value: nil
+      value: opts[:value]
     }}
   end
 
   def child_spec(opts) do
+    Logger.info("child_spec - #{Kernel.inspect opts}")
+
     key = opts[:key]
 
     %{
       id: "ValueServer:#{key}",
-      start: {__MODULE__, :start_link, [key]},
+      start: {__MODULE__, :start_link, [opts]},
+      # start: {__MODULE__, :start_link, [key]},
       shutdown: 10_000,
       restart: :transient
     }

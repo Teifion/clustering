@@ -23,6 +23,7 @@ defmodule Clustering do
   # end
 
   def start_value_server(opts) do
+    Logger.info("start_value_server - #{Kernel.inspect opts}")
     Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, opts})
   end
 
