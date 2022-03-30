@@ -43,3 +43,10 @@ https://dashbit.co/blog/you-may-not-need-redis-with-elixir - https://github.com/
 https://hexdocs.pm/swarm/readme.html
 https://github.com/bitwalker/libcluster - makes use of libcluster which is way better than my adhoc genserver method
 https://stephenbussey.com/2019/01/29/distributed-in-memory-caching-in-elixir.html - https://gist.github.com/sb8244/371335946d444bd8c5786571cacef4d6
+
+https://www.youtube.com/watch?v=V3iBgStaPmA - Talk on the matter
+
+
+# Horde
+https://www.youtube.com/watch?v=nLApFANtkHs - talk on the matter
+

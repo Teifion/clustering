@@ -49,6 +49,7 @@ defmodule Clustering.MixProject do
       {:parallel, "~> 0.0"},
       {:con_cache, "~> 1.0"},
       {:libcluster, "~> 3.3"},
+      {:horde, "~> 0.8"},
     ]
   end
 

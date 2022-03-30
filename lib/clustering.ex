@@ -1,4 +1,6 @@
 defmodule Clustering do
+  require Logger
+  alias Phoenix.PubSub
   @moduledoc """
   Clustering keeps the contexts that define your domain
   and business logic.
@@ -6,43 +8,45 @@ defmodule Clustering do
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
-  @doc """
-  Starts worker and registers name in the cluster, then joins the process
-  to the `:foo` group
-  """
-  def start_worker(name) do
-    {:ok, pid} = Swarm.register_name(name, Clustering.SwarmSupervisor, :register, [name])
-    Swarm.join(:foo, pid)
+
+  # def start_value_server(key) do
+  #   result =
+  #     DynamicSupervisor.start_child(Clustering.ValueSupervisor, {
+  #       Clustering.ValueServer,
+  #       name: via_tuple("ValueServer:#{key}", key),
+  #       data: %{
+  #         key: key,
+  #       }
+  #     })
+
+  #   Logger.info(Kernel.inspect result)
+  # end
+
+  def start_value_server(key) do
+    Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
   end
 
-  @doc """
-  Gets the pid of the worker with the given name
-  """
-  def get_worker(name), do: Swarm.whereis_name(name)
+  # defp via_tuple(key) do
+  #   {:via, Horde.Registry, {Clustering.ValueRegistry, "ValueServer:#{key}"}}
+  # end
 
-  @doc """
-  Gets all of the pids that are members of the `:foo` group
-  """
-  def get_foos(), do: Swarm.members(:foo)
+  def values() do
+    # See contents of registry
+    pids = Registry.select(Clustering.ValueRegistry, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$2", :"$3"}}]}])
 
-  @doc """
-  Call some worker by name
-  """
-  def call_worker(name, msg), do: GenServer.call({:via, :swarm, name}, msg)
+    pids
+    |> Enum.each(fn {name, pid, id} ->
+      node = GenServer.call(pid, :node)
+      value = GenServer.call(pid, :get_value)
+      Logger.info Kernel.inspect({name, pid, id, value, node})
+    end)
+  end
 
-  @doc """
-  Cast to some worker by name
-  """
-  def cast_worker(name, msg), do: GenServer.cast({:via, :swarm, name}, msg)
-
-  @doc """
-  Publish a message to all members of group `:foo`
-  """
-  def publish_foos(msg), do: Swarm.publish(:foo, msg)
-
-  @doc """
-  Call all members of group `:foo` and collect the results,
-  any failures or nil values are filtered out of the result list
-  """
-  def call_foos(msg), do: Swarm.multi_call(:foo, msg)
+  def set_value(key, value) do
+    PubSub.broadcast(
+      Clustering.PubSub,
+      "ets_updates",
+      {:update_value, :shared_cache, key, value}
+    )
+  end
 end

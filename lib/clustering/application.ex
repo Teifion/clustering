@@ -25,7 +25,13 @@ defmodule Clustering.Application do
       Clustering.DbServer,
 
       # Note the name of Cluster.Supervisor is from libcluster, not the Clustering app
-      {Cluster.Supervisor, [topologies, [name: Clustering.SwarmSupervisor]]},
+      {Cluster.Supervisor, [topologies, [name: Clustering.LibClusterSupervisor]]},
+
+      {Horde.Registry, [name: Clustering.ValueRegistry, keys: :unique]},
+      {Horde.DynamicSupervisor, [name: Clustering.ValueSupervisor, strategy: :one_for_one]},
+
+      # {DynamicSupervisor, strategy: :one_for_one, name: Clustering.ValueSupervisor},
+      {Clustering.CoordinatorServer, name: Clustering.CoordinatorServer},
 
       concache_perm_sup(:node_cache),
       concache_perm_sup(:shared_cache),

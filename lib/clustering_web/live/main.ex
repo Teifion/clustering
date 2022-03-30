@@ -27,6 +27,7 @@ defmodule ClusteringWeb.MainPageLive do
     node_var = ConCache.get_or_store(:node_cache, id, fn -> 0 end)
     shared_var = ConCache.get(:shared_cache, id) || 0
 
+    Clustering.start_value_server(id)
     :ok = PubSub.subscribe(Clustering.PubSub, "ets_updates:shared_cache/#{id}")
 
     {:noreply,
@@ -104,22 +105,14 @@ defmodule ClusteringWeb.MainPageLive do
 
   def handle_event("shared_var:up", _event, %{assigns: %{id: id, shared_var: shared_var}} = socket) do
     new_value = shared_var + 1
-    PubSub.broadcast(
-      Clustering.PubSub,
-      "ets_updates",
-      {:update_value, :shared_cache, id, new_value}
-    )
+    Clustering.set_value(id, new_value)
 
     {:noreply, socket}
   end
 
   def handle_event("shared_var:down", _event, %{assigns: %{id: id, shared_var: shared_var}} = socket) do
     new_value = shared_var - 1
-    PubSub.broadcast(
-      Clustering.PubSub,
-      "ets_updates",
-      {:update_value, :shared_cache, id, new_value}
-    )
+    Clustering.set_value(id, new_value)
 
     {:noreply, socket}
   end
