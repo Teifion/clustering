@@ -31,9 +31,6 @@ defmodule Clustering.Application do
       {Horde.Registry, [name: Clustering.ValueRegistry, keys: :unique, members: :auto]},
       {Horde.DynamicSupervisor, [name: Clustering.ValueSupervisor, strategy: :one_for_one, members: :auto]},
 
-      # {DynamicSupervisor, strategy: :one_for_one, name: Clustering.ValueSupervisor},
-      {Clustering.CoordinatorServer, name: Clustering.CoordinatorServer},
-
       concache_perm_sup(:node_cache),
       concache_perm_sup(:shared_cache),
     ]

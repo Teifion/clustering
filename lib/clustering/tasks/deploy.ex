@@ -14,8 +14,9 @@ defmodule Mix.Tasks.Deploy do
     System.shell("sh scripts/generate_release.sh")
 
     ips
+    # |> Enum.take(2)
     |> log_and_go("Copying and executing")
-    |> Parallel.each(fn ip ->
+    |> Enum.each(fn ip ->
       System.shell("scp -i ~/.ssh/id_rsa remote/dodeploy.sh root@#{ip}:/deploy.sh")
       System.shell("scp -i /home/teifion/.ssh/id_rsa rel/artifacts/clustering.tar.gz root@#{ip}:/releases/clustering.tar.gz")
       System.shell(

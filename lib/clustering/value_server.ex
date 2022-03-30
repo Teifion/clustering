@@ -4,8 +4,6 @@ defmodule Clustering.ValueServer do
   require Logger
 
   def start_link(opts) do
-    Logger.info("start_link - #{Kernel.inspect opts}")
-
     case GenServer.start_link(__MODULE__, opts, name: via_tuple(opts[:key])) do
       {:ok, pid} ->
         {:ok, pid}
@@ -34,10 +32,11 @@ defmodule Clustering.ValueServer do
   end
 
   @impl true
-  def handle_info({:put, value}, state) do
+  def handle_cast({:put, value}, state) do
     {:noreply, %{state | value: value}}
   end
 
+  @impl true
   def handle_info({:update_value, _table, key, value}, state) do
     new_state = if key == state.key do
       %{state | value: value}
@@ -50,8 +49,6 @@ defmodule Clustering.ValueServer do
 
   @impl true
   def init(opts) do
-    Logger.info("init - #{Kernel.inspect opts}")
-
     key = opts[:key]
 
     :ok = PubSub.subscribe(Clustering.PubSub, "ets_updates")
@@ -63,14 +60,11 @@ defmodule Clustering.ValueServer do
   end
 
   def child_spec(opts) do
-    Logger.info("child_spec - #{Kernel.inspect opts}")
-
     key = opts[:key]
 
     %{
       id: "ValueServer:#{key}",
       start: {__MODULE__, :start_link, [opts]},
-      # start: {__MODULE__, :start_link, [key]},
       shutdown: 10_000,
       restart: :transient
     }

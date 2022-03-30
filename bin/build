@@ -19,6 +19,7 @@ echo "Cleaning and compiling..."
 mix phx.digest
 
 echo "Generating release..."
+mix release.init
 mix release
 
 echo "Creating tarball..."
