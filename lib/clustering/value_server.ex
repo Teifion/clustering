@@ -3,14 +3,8 @@ defmodule Clustering.ValueServer do
   alias Phoenix.PubSub
   require Logger
 
-  # Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: "123"]})
-  # Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: "124"]})
-
-  # via = {:via, Horde.Registry, {Clustering.ValueRegistry, "ValueServer:123"}}
-  # GenServer.call(via, :get_state)
-
   def start_link(key) do
-    case GenServer.start_link(__MODULE__, [key: key], name: via_tuple(key), key: key) do
+    case GenServer.start_link(__MODULE__, [key: key], name: via_tuple(key)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -22,10 +16,6 @@ defmodule Clustering.ValueServer do
 
   defp via_tuple(key) do
     {:via, Horde.Registry, {Clustering.ValueRegistry, "ValueServer:#{key}"}}
-  end
-
-  def new_server(key) do
-    Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
   end
 
   @impl true

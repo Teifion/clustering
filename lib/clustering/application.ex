@@ -9,9 +9,10 @@ defmodule Clustering.Application do
   @impl true
   def start(_type, _args) do
     topologies = [
-      example: [
+      clustering_app: [
         strategy: Cluster.Strategy.Epmd,
         config: [hosts: ~w(clustering@cbox1 clustering@cbox2 clustering@cbox3 clustering@cbox4)a],
+        # config: [hosts: ~w(nonode@nohost)a],
       ]
     ]
 
@@ -27,8 +28,8 @@ defmodule Clustering.Application do
       # Note the name of Cluster.Supervisor is from libcluster, not the Clustering app
       {Cluster.Supervisor, [topologies, [name: Clustering.LibClusterSupervisor]]},
 
-      {Horde.Registry, [name: Clustering.ValueRegistry, keys: :unique]},
-      {Horde.DynamicSupervisor, [name: Clustering.ValueSupervisor, strategy: :one_for_one]},
+      {Horde.Registry, [name: Clustering.ValueRegistry, keys: :unique, members: :auto]},
+      {Horde.DynamicSupervisor, [name: Clustering.ValueSupervisor, strategy: :one_for_one, members: :auto]},
 
       # {DynamicSupervisor, strategy: :one_for_one, name: Clustering.ValueSupervisor},
       {Clustering.CoordinatorServer, name: Clustering.CoordinatorServer},

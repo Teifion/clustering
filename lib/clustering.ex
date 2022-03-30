@@ -22,8 +22,8 @@ defmodule Clustering do
   #   Logger.info(Kernel.inspect result)
   # end
 
-  def start_value_server(key) do
-    Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
+  def start_value_server(opts) do
+    Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, opts})
   end
 
   # defp via_tuple(key) do
@@ -32,7 +32,7 @@ defmodule Clustering do
 
   def values() do
     # See contents of registry
-    pids = Registry.select(Clustering.ValueRegistry, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$2", :"$3"}}]}])
+    pids = Horde.Registry.select(Clustering.ValueRegistry, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$2", :"$3"}}]}])
 
     pids
     |> Enum.each(fn {name, pid, id} ->
