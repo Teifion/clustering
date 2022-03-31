@@ -31,7 +31,7 @@ defmodule Clustering do
       }
     })
 
-    Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
+    # Horde.DynamicSupervisor.start_child(Clustering.ValueSupervisor, {Clustering.ValueServer, [key: key]})
   end
 
   def register_value_server(key) do
